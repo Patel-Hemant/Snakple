@@ -21,10 +21,12 @@ public class GameView extends View {
     float tileSizeY;
     float circleSize;
     Bitmap apple;
+    Bitmap obstacle;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         apple = BitmapFactory.decodeResource(context.getResources(), R.drawable.apple_3);
+        obstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.fire_animation);
     }
 
     public void setSnakeViewMap(TileType[][] map) {
@@ -57,6 +59,8 @@ public class GameView extends View {
                             canvas.drawCircle(x * tileSizeX + tileSizeX / 2f + circleSize / 2, y * tileSizeY + tileSizeY / 2f + circleSize / 2, circleSize, mPaint);
                             drawApple(canvas, x * tileSizeX, y * tileSizeY);
                             break;
+                        case Fire:
+                            drawObstacle(canvas, x * tileSizeX, y * tileSizeY);
                     }
                 }
             }
@@ -83,5 +87,12 @@ public class GameView extends View {
         rect.offset((int) (x + 5 - tileSizeX / 2), (int) (y - tileSizeY / 2));
 
         canvas.drawBitmap(apple, null, rect, null);
+    }
+
+    protected void drawObstacle(Canvas canvas, float x, float y) {
+        Rect rect = new Rect(0, 0, (int) (2 * tileSizeX), (int) (2 * tileSizeX));
+        rect.offset((int) (x + 5 - tileSizeX / 2), (int) (y - tileSizeY / 2));
+
+        canvas.drawBitmap(obstacle, null, rect, null);
     }
 }

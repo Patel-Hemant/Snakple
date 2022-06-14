@@ -26,13 +26,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private final Handler snakeHandler = new Handler();
     private final Handler appleHandler = new Handler();
+    private Runnable snakeRunnable;
+    private Runnable appleRunnable;
     private final long snakeUpdateDelay = 150;
-    private final long appleUpdateDelay = 155;
+    private final long appleUpdateDelay = 153;
 
     private int currentScore = 0;
     private int time = 0;
+    private int sec_for_obstacle = 0;
 
     private float prevX = 0, prevY = 0;
+
+    public MainActivity() {
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -48,12 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         gameView = (GameView) findViewById(R.id.gameView);
         gameView.setOnTouchListener(this);
 
-        startSnakeUpdateHandler();
-        startAppleUpdateHandler();
-    }
-
-    private void startSnakeUpdateHandler() {
-        snakeHandler.postDelayed(new Runnable() {
+        snakeRunnable = new Runnable() {
             @Override
             public void run() {
                 gameEngine.updateSnakePosition();
@@ -66,9 +67,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 // update the score
                 time += snakeUpdateDelay;
                 if (time >= 1000) {
+                    sec_for_obstacle++;
+                    if (sec_for_obstacle >= 5) {
+                        gameEngine.addObstacle();
+                        sec_for_obstacle = 0;
+                    }
+
                     currentScore += 1000;
                     String data = (currentScore < 9000) ? "Current Score : 0" : "Current Score : ";
-                    scoreTV.setText(data + (currentScore / 1000));
+                    data += currentScore / 1000;
+                    scoreTV.setText(data);
                     time = 0;
                 }
 
@@ -78,11 +86,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     OnGameLost();
                 }
             }
-        }, snakeUpdateDelay);
-    }
-
-    private void startAppleUpdateHandler() {
-        appleHandler.postDelayed(new Runnable() {
+        };
+        appleRunnable = new Runnable() {
             @Override
             public void run() {
                 gameEngine.updateApplePosition();
@@ -92,7 +97,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     OnGameLost();
                 }
             }
-        }, appleUpdateDelay);
+        };
+
+        startSnakeUpdateHandler();
+        startAppleUpdateHandler();
+    }
+
+    private void startSnakeUpdateHandler() {
+        snakeHandler.postDelayed(snakeRunnable, snakeUpdateDelay);
+    }
+
+    private void startAppleUpdateHandler() {
+        appleHandler.postDelayed(appleRunnable, appleUpdateDelay);
     }
 
     private void OnGameLost() {
@@ -119,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         alert.show();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -140,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         //Left
                         turnLeftApple();
                     }
-
                 } else {
                     //Up-Down direction
                     if (newY > prevY) {
@@ -155,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         return true;
     }
-
 
     // Turn function for snake
     public void turnLeftSnake() {
@@ -184,14 +199,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //            Toast.makeText(MainActivity.this, "1", Toast.LENGTH_SHORT).show();
             if (gameEngine.snakeDirection.equals(Direction.East)) {
                 turnTopSnake();
-                turnLeftSnake();
+//                turnLeftSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.West)) {
                 turnTopSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.North)) {
                 turnLeftSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.South)) {
                 turnLeftSnake();
-                turnTopSnake();
+//                turnTopSnake();
             }
         } else if (snake.getX() < apple.getX() && snake.getY() > apple.getY()) {
 //            Toast.makeText(MainActivity.this, "2", Toast.LENGTH_SHORT).show();
@@ -199,12 +214,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 turnTopSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.West)) {
                 turnTopSnake();
-                turnRightSnake();
+//                turnRightSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.North)) {
                 turnRightSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.South)) {
                 turnRightSnake();
-                turnTopSnake();
+//                turnTopSnake();
             }
         } else if (snake.getX() < apple.getX() && snake.getY() < apple.getY()) {
 //            Toast.makeText(MainActivity.this, "3", Toast.LENGTH_SHORT).show();
@@ -212,10 +227,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 turnDownSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.West)) {
                 turnDownSnake();
-                turnRightSnake();
+//                turnRightSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.North)) {
                 turnRightSnake();
-                turnDownSnake();
+//                turnDownSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.South)) {
                 turnRightSnake();
             }
@@ -223,12 +238,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //            Toast.makeText(MainActivity.this, "4", Toast.LENGTH_SHORT).show();
             if (gameEngine.snakeDirection.equals(Direction.East)) {
                 turnDownSnake();
-                turnLeftSnake();
+//                turnLeftSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.West)) {
                 turnDownSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.North)) {
                 turnLeftSnake();
-                turnDownSnake();
+//                turnDownSnake();
             } else if (gameEngine.snakeDirection.equals(Direction.South)) {
                 turnLeftSnake();
             }
@@ -258,5 +273,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void turnTopApple() {
         gameEngine.UpdateAppleDirection(Direction.North);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        snakeHandler.removeCallbacks(snakeRunnable);
+        appleHandler.removeCallbacks(appleRunnable);
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Snakple</string>
+    <string name="current_score_00">Current Score : 00</string>
 </resources>
