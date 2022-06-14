@@ -169,12 +169,16 @@ public class GameEngine {
 
     private void AddSnake() {
         snake.clear();
+        snake.add(new Coordinate(10, 3));
+        snake.add(new Coordinate(9, 3));
+        snake.add(new Coordinate(8, 3));
         snake.add(new Coordinate(7, 3));
         snake.add(new Coordinate(6, 3));
         snake.add(new Coordinate(5, 3));
         snake.add(new Coordinate(4, 3));
         snake.add(new Coordinate(3, 3));
         snake.add(new Coordinate(2, 3));
+        snake.add(new Coordinate(1, 3));
     }
 
     private void removeTail() {

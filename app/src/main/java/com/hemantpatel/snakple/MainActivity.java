@@ -28,17 +28,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private final Handler appleHandler = new Handler();
     private Runnable snakeRunnable;
     private Runnable appleRunnable;
-    private final long snakeUpdateDelay = 150;
-    private final long appleUpdateDelay = 153;
+    private final long snakeUpdateDelay = 200;
+    private final long appleUpdateDelay = 203;
 
     private int currentScore = 0;
     private int time = 0;
     private int sec_for_obstacle = 0;
 
     private float prevX = 0, prevY = 0;
-
-    public MainActivity() {
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -256,6 +253,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         } else if (snake.getX() < apple.getX() && snake.getY() == apple.getY()) {
             turnRightSnake();
         }
+
+        // update snake direction for update the image of snake's head
+        if (gameView != null && gameEngine != null) gameView.setSnakeDirection(gameEngine.snakeDirection);
     }
 
     // Turn function for apple

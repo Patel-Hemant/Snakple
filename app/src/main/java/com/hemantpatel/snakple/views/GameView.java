@@ -9,8 +9,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 
 import com.hemantpatel.snakple.R;
+import com.hemantpatel.snakple.enums.Direction;
 import com.hemantpatel.snakple.enums.TileType;
 
 public class GameView extends View {
@@ -20,19 +22,30 @@ public class GameView extends View {
     float tileSizeX;
     float tileSizeY;
     float circleSize;
-    Bitmap apple;
-    Bitmap obstacle;
+    Direction snakeDirection;
+    Bitmap apple, obstacle, grass;
+    Bitmap[] snakeHead = new Bitmap[4];
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         apple = BitmapFactory.decodeResource(context.getResources(), R.drawable.apple_3);
         obstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.fire_animation);
+        grass = BitmapFactory.decodeResource(context.getResources(), R.drawable.grass_3);
+
+        snakeHead[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.snake_head_top);
+        snakeHead[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.snake_head_right);
+        snakeHead[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.snake_head_down);
+        snakeHead[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.snake_head_left);
     }
 
     public void setSnakeViewMap(TileType[][] map) {
         this.snakeViewMap = map;
         m = map.length;
         n = map[0].length;
+    }
+
+    public void setSnakeDirection(Direction direction) {
+        snakeDirection = direction;
     }
 
     protected void onDraw(Canvas canvas) {
@@ -47,16 +60,17 @@ public class GameView extends View {
                 for (int y = 1; y < m - 1; y++) {
                     switch (snakeViewMap[x][y]) {
                         case SnakeHead:
-                            mPaint.setColor(Color.BLACK);
-                            canvas.drawCircle(x * tileSizeX + tileSizeX / 2f + circleSize / 2, y * tileSizeY + tileSizeY / 2f + circleSize / 2, circleSize, mPaint);
+                            drawSnakeHead(canvas, x * tileSizeX, y * tileSizeY);
+                            // mPaint.setColor(Color.BLACK);
+                            // canvas.drawCircle(x * tileSizeX + tileSizeX / 2f + circleSize / 2, y * tileSizeY + tileSizeY / 2f + circleSize / 2, circleSize, mPaint);
                             break;
                         case SnakeBody:
-                            mPaint.setColor(Color.GRAY);
-                            canvas.drawCircle(x * tileSizeX + tileSizeX / 2f + circleSize / 2, y * tileSizeY + tileSizeY / 2f + circleSize / 2, circleSize, mPaint);
+                            mPaint.setColor(Color.rgb(99, 69, 23));
+                            canvas.drawRect(x * tileSizeX, y * tileSizeY, (x + 1) * tileSizeX, (y + 1) * tileSizeY, mPaint);
+                            mPaint.setColor(Color.WHITE);
+                            canvas.drawCircle(x * tileSizeX + tileSizeX / 2f, y * tileSizeY + tileSizeY / 2f, circleSize / 3, mPaint);
                             break;
                         case Apple:
-                            mPaint.setColor(Color.RED);
-                            canvas.drawCircle(x * tileSizeX + tileSizeX / 2f + circleSize / 2, y * tileSizeY + tileSizeY / 2f + circleSize / 2, circleSize, mPaint);
                             drawApple(canvas, x * tileSizeX, y * tileSizeY);
                             break;
                         case Fire:
@@ -94,5 +108,35 @@ public class GameView extends View {
         rect.offset((int) (x + 5 - tileSizeX / 2), (int) (y - tileSizeY / 2));
 
         canvas.drawBitmap(obstacle, null, rect, null);
+    }
+
+    protected void drawGrass(Canvas canvas, float x, float y) {
+        Rect rect = new Rect(0, 0, (int) (2 * tileSizeX), (int) (2 * tileSizeX));
+        rect.offset((int) (x + 5 - tileSizeX / 2), (int) (y - tileSizeY / 2));
+
+        canvas.drawBitmap(grass, null, rect, null);
+    }
+
+    protected void drawSnakeHead(Canvas canvas, float x, float y) {
+        Rect rect = new Rect(0, 0, (int) (2 * tileSizeX), (int) (2 * tileSizeX));
+        rect.offset((int) (x + 5 - tileSizeX / 2), (int) (y - tileSizeY / 2));
+
+        Bitmap snakeHeadBitmap = null;
+        switch (snakeDirection) {
+            case North:
+                snakeHeadBitmap = snakeHead[0];
+                break;
+            case East:
+                snakeHeadBitmap = snakeHead[1];
+                break;
+            case South:
+                snakeHeadBitmap = snakeHead[2];
+                break;
+            case West:
+                snakeHeadBitmap = snakeHead[3];
+                break;
+        }
+
+        canvas.drawBitmap(snakeHeadBitmap, null, rect, null);
     }
 }
