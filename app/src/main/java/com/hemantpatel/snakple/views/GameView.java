@@ -84,8 +84,8 @@ public class GameView extends View {
 
     protected void drawWall(Canvas canvas) {
         mPaint.setColor(Color.rgb(179, 82, 4));
-        mPaint.setStrokeWidth(10);
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+//        mPaint.setStrokeWidth(10);
+        mPaint.setStyle(Paint.Style.FILL);
 
         canvas.drawRect(0, 0, n * tileSizeX, tileSizeY, mPaint);
         canvas.drawRect(0, tileSizeY * (m - 1), n * tileSizeX, tileSizeY * m, mPaint);

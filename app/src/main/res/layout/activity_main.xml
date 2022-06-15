@@ -7,8 +7,10 @@
     tools:context=".MainActivity">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0sp"
+        android:contentDescription="@string/game_view_background_image"
         android:scaleType="centerCrop"
         android:src="@drawable/garden_bg2"
         app:layout_constraintDimensionRatio="1:1"
@@ -16,6 +18,18 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:contentDescription="@string/background_image_for_text_details"
+        android:scaleType="centerCrop"
+        android:src="@drawable/wood_bg_img"
+        app:layout_constraintBottom_toBottomOf="@+id/gameView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <com.hemantpatel.snakple.views.GameView
         android:id="@+id/gameView"
