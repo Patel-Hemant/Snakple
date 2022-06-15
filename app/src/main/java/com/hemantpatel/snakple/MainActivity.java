@@ -3,11 +3,15 @@ package com.hemantpatel.snakple;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +22,14 @@ import com.hemantpatel.snakple.enums.Direction;
 import com.hemantpatel.snakple.enums.GameState;
 import com.hemantpatel.snakple.views.GameView;
 
+import java.io.IOException;
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
-    TextView scoreTV;
+    private MediaPlayer mPlayer;
+    private Uri snake_bull, snake_running, snake_running2, game_bg_music, hit_wall, fire_burn;
+
+    private TextView scoreTV;
 
     private GameEngine gameEngine;
     private GameView gameView;
@@ -28,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private final Handler appleHandler = new Handler();
     private Runnable snakeRunnable;
     private Runnable appleRunnable;
-    private final long snakeUpdateDelay = 200;
-    private final long appleUpdateDelay = 203;
+    private final long snakeUpdateDelay = 180;
+    private final long appleUpdateDelay = 183;
 
     private int currentScore = 0;
     private int time = 0;
@@ -42,6 +52,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+
+        mPlayer = new MediaPlayer();
+        mPlayer.setVolume(0.8f, 0.8f);
+
+        snake_bull = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.snake_bull);
+        snake_running = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.snake_running);
+        snake_running2 = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.snake_running2);
+        game_bg_music = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.game_bg_music);
+        hit_wall = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.hit_wall);
+        fire_burn = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.fire_burn);
+
+        playSound(game_bg_music, true);
 
         scoreTV = findViewById(R.id.score_view);
 
@@ -109,10 +132,26 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     private void OnGameLost() {
+        String death_note = "";
+        switch (gameEngine.gameOverState) {
+            case ByWallCrashed:
+                death_note = "Crashed by Wall! 🧱";
+                playSound(hit_wall, false);
+                break;
+            case EatenBySnake:
+                death_note = "Eaten by Snake! 🐍";
+                playSound(snake_bull, false);
+                break;
+            case BurnedByFire:
+                death_note = "Burned in Fire! 🔥";
+                playSound(fire_burn, false);
+                break;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Game Over 💔");
         builder.setCancelable(false);
-        builder.setMessage("Your Score : " + currentScore / 1000 + "\nDo you want to start New game??");
+        builder.setMessage("Your Score : " + currentScore / 1000 + "\n" + death_note + "\nDo you want to start New game??");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -130,6 +169,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void playSound(Uri uri, boolean isLoop) {
+        mPlayer.reset();
+        mPlayer.setLooping(isLoop);
+        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mPlayer.setDataSource(getApplicationContext(), uri);
+            mPlayer.prepare();
+            mPlayer.setOnPreparedListener(MediaPlayer::start);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -255,7 +307,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         // update snake direction for update the image of snake's head
-        if (gameView != null && gameEngine != null) gameView.setSnakeDirection(gameEngine.snakeDirection);
+        if (gameView != null && gameEngine != null)
+            gameView.setSnakeDirection(gameEngine.snakeDirection);
     }
 
     // Turn function for apple

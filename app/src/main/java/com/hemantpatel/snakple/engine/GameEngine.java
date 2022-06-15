@@ -2,6 +2,7 @@ package com.hemantpatel.snakple.engine;
 
 import com.hemantpatel.snakple.classes.Coordinate;
 import com.hemantpatel.snakple.enums.Direction;
+import com.hemantpatel.snakple.enums.GameOverType;
 import com.hemantpatel.snakple.enums.GameState;
 import com.hemantpatel.snakple.enums.TileType;
 
@@ -26,6 +27,7 @@ public class GameEngine {
     public Direction snakeDirection = Direction.East;
     public Direction appleDirection = Direction.East;
     private GameState currentGameState = GameState.Running;
+    public GameOverType gameOverState = null;
 
     public Coordinate getSnakeHead() {
         return snake.get(0);
@@ -35,9 +37,7 @@ public class GameEngine {
         return apple;
     }
 
-    public GameEngine() {
-
-    }
+    public GameEngine() {}
 
     public void initGame() {
         AddSnake();
@@ -101,6 +101,7 @@ public class GameEngine {
         // check wall collision
         for (Coordinate w : walls) {
             if (apple.equals(w)) {
+                gameOverState = GameOverType.ByWallCrashed;
                 currentGameState = GameState.Lost;
                 return;
             }
@@ -109,6 +110,7 @@ public class GameEngine {
         // check snake collision
         for (int i = 0; i < snake.size(); i++) {
             if (apple.equals(snake.get(i))) {
+                gameOverState = GameOverType.EatenBySnake;
                 currentGameState = GameState.Lost;
                 return;
             }
@@ -117,6 +119,7 @@ public class GameEngine {
         // check fire collision
         for (int i = 0; i < fires.size(); i++) {
             if (apple.equals(fires.get(i))) {
+                gameOverState = GameOverType.BurnedByFire;
                 currentGameState = GameState.Lost;
                 return;
             }
