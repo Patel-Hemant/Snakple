@@ -331,6 +331,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mPlayer.reset();
         snakeHandler.removeCallbacks(snakeRunnable);
         appleHandler.removeCallbacks(appleRunnable);
     }
