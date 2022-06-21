@@ -3,4 +3,7 @@
     <string name="current_score_00">Current Score : 00</string>
     <string name="game_view_background_image">Game View Background Image</string>
     <string name="background_image_for_text_details">Background image for text details</string>
+    <string name="exit">Exit</string>
+    <string name="setting">Setting</string>
+    <string name="play">Play</string>
 </resources>

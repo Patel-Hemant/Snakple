@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wood_bg_img"
+    tools:context=".HomeActivity">
+    <!--    android:background="#EEEEFF"-->
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        android:padding="40sp"
+        android:src="@drawable/apple_3"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.widget.Button
+        android:id="@+id/play_btn"
+        style="@style/btn_theme"
+        android:layout_marginBottom="24dp"
+        android:drawableStart="@drawable/ic_baseline_videogame"
+        android:onClick="openActivity"
+        android:text="@string/play"
+        app:layout_constraintBottom_toTopOf="@+id/setting_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="UsingOnClickInXml" />
+
+    <android.widget.Button
+        android:id="@+id/setting_btn"
+        style="@style/btn_theme"
+        android:layout_width="0sp"
+        android:layout_marginBottom="24dp"
+        android:drawableStart="@drawable/ic_baseline_settings"
+        android:onClick="openActivity"
+        android:text="@string/setting"
+        app:layout_constraintBottom_toTopOf="@+id/exit_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="UsingOnClickInXml" />
+
+    <android.widget.Button
+        android:id="@+id/exit_btn"
+        style="@style/btn_theme"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:drawableStart="@drawable/ic_baseline_exit"
+        android:onClick="openActivity"
+        android:text="@string/exit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="UsingOnClickInXml" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

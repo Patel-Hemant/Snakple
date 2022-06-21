@@ -13,4 +13,27 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="btn_theme" parent="Theme.Snakple">
+        <item name="android:layout_width">0sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">55dp</item>
+        <item name="android:layout_marginEnd">55dp</item>
+        <item name="android:backgroundTint">#FFFFFF</item>
+        <item name="android:background">@drawable/btn_bg</item>
+        <item name="android:paddingVertical" tools:targetApi="o">10dp</item>
+        <item name="android:paddingHorizontal" tools:targetApi="o">20dp</item>
+        <item name="android:textSize">17sp</item>
+<!--        <item name="android:textStyle">bold</item>-->
+    </style>
+
+    <style name="switch_theme" parent="Theme.Snakple">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#1C8100</item>
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#FF0505</item>
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#42221f1f
+        </item>
+    </style>
 </resources>

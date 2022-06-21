@@ -1,13 +1,18 @@
 package com.hemantpatel.snakple;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -28,6 +33,10 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
     private MediaPlayer mPlayer;
     private Uri snake_bull, snake_running, snake_running2, game_bg_music, hit_wall, fire_burn;
+    SharedPreferences sharedPreferences;
+    boolean sound_data;
+    boolean music_data;
+    boolean vibrate_data;
 
     private TextView scoreTV;
 
@@ -53,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Objects.requireNonNull(getSupportActionBar()).hide();
+        sharedPreferences = getSharedPreferences("SettingData", MODE_PRIVATE);
+        sound_data = sharedPreferences.getBoolean("SOUND_KEY", true);
+        music_data = sharedPreferences.getBoolean("MUSIC_KEY", true);
+        vibrate_data = sharedPreferences.getBoolean("VIBRATE_KEY", true);
 
         mPlayer = new MediaPlayer();
         mPlayer.setVolume(0.8f, 0.8f);
@@ -64,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         hit_wall = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.hit_wall);
         fire_burn = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.fire_burn);
 
-        playSound(game_bg_music, true);
+        playSound(game_bg_music, true, music_data);
 
         scoreTV = findViewById(R.id.score_view);
 
@@ -132,19 +145,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     private void OnGameLost() {
+        if (vibrate_data) vibrate();
         String death_note = "";
         switch (gameEngine.gameOverState) {
             case ByWallCrashed:
-                death_note = "Crashed by Wall! 🧱";
-                playSound(hit_wall, false);
+                death_note = "Crashed on Wall! 🧱";
+                playSound(hit_wall, false, sound_data);
                 break;
             case EatenBySnake:
                 death_note = "Eaten by Snake! 🐍";
-                playSound(snake_bull, false);
+                playSound(snake_bull, false, sound_data);
                 break;
             case BurnedByFire:
                 death_note = "Burned in Fire! 🔥";
-                playSound(fire_burn, false);
+                playSound(fire_burn, false, sound_data);
                 break;
         }
 
@@ -155,10 +169,23 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage(getBaseContext().getPackageName());
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                // For restart the activity
+                // Intent intent = getIntent();
+                // finish();
+                // startActivity(intent);
+
+                Intent intent = getIntent();
+                overridePendingTransition(0, 0);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(intent);
+
+                // For restart the app
+                // Intent i = getBaseContext().getPackageManager()
+                //         .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                // startActivity(i);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -171,9 +198,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         alert.show();
     }
 
-    private void playSound(Uri uri, boolean isLoop) {
+    private void playSound(Uri uri, boolean isLoop, boolean volumeOn) {
+        float volume = (volumeOn) ? 0.8f : 0;
         mPlayer.reset();
         mPlayer.setLooping(isLoop);
+        mPlayer.setVolume(volume, volume);
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mPlayer.setDataSource(getApplicationContext(), uri);
@@ -182,6 +211,22 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void vibrate() {
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 1000 milliseconds after 500 ms
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    //deprecated in API 26
+                    v.vibrate(1000);
+                }
+            }
+        }, 1000);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -331,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mPlayer.reset();
         snakeHandler.removeCallbacks(snakeRunnable);
         appleHandler.removeCallbacks(appleRunnable);
     }
