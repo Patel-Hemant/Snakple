@@ -24,7 +24,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(HomeActivity.this, MainActivity.class));
                 break;
             case R.id.setting_btn:
-                Toast.makeText(this, "Setting Activity will be Opening..", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this, SettingActivity.class));
                 break;
             case R.id.exit_btn:
                 finish();

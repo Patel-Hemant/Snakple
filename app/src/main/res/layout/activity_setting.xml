@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wood_bg_img"
+    tools:context=".SettingActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <TextView
+        android:id="@+id/sound_tv"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/btn_bg"
+        android:paddingHorizontal="20sp"
+        android:paddingVertical="10sp"
+        android:text="Sound"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:drawableRightCompat="@drawable/ic_baseline_speaker"
+        app:layout_constraintBottom_toTopOf="@+id/music_tv"
+        app:layout_constraintEnd_toStartOf="@+id/switch_sound"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/music_tv"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/btn_bg"
+        android:paddingHorizontal="20sp"
+        android:paddingVertical="10sp"
+        android:text="Music"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:drawableRightCompat="@drawable/ic_baseline_library_music_24"
+        app:layout_constraintBottom_toTopOf="@+id/vibration_tv"
+        app:layout_constraintEnd_toStartOf="@+id/switch_music"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sound_tv"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/vibration_tv"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/btn_bg"
+        android:paddingHorizontal="20sp"
+        android:paddingVertical="10sp"
+        android:text="Vibration"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:drawableRightCompat="@drawable/ic_baseline_vibration_24"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintEnd_toStartOf="@+id/switch_vibration"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/music_tv"
+        tools:ignore="RtlSymmetry" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <Switch
+        android:id="@+id/switch_sound"
+        android:layout_width="wrap_content"
+        android:layout_height="0sp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/btn_bg"
+        android:padding="5sp"
+        android:thumbTint="#2C2C2C"
+        android:trackTint="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/sound_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sound_tv"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        tools:targetApi="m" />
+
+    <Switch
+        android:id="@+id/switch_music"
+        android:layout_width="wrap_content"
+        android:layout_height="0sp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/btn_bg"
+        android:padding="5sp"
+        android:thumbTint="#2C2C2C"
+        android:trackTint="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/music_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/music_tv"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
+        android:id="@+id/switch_vibration"
+        android:layout_width="wrap_content"
+        android:layout_height="0sp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/btn_bg"
+        android:padding="5sp"
+        android:thumbTint="#2C2C2C"
+        android:trackTint="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/vibration_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vibration_tv"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
